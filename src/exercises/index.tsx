@@ -1,20 +1,22 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import ExercisesScreen from './ExercisesScreen';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Exercises, { options as exercisesOptions } from './ExercisesScreen';
+import AddExercise from './AddExerciseScreen';
 
 const Stack = createStackNavigator();
-
-const Icons = () => <Icon name="plus" />;
 
 const Navigator = () => (
   <Stack.Navigator>
     <Stack.Screen
       name="exercises-index"
-      component={ExercisesScreen}
+      component={Exercises}
+      options={exercisesOptions}
+    />
+    <Stack.Screen
+      name="exercises-add-exercise"
+      component={AddExercise}
       options={{
-        title: 'Exercises',
-        headerRight: Icons,
+        title: 'Hasa',
       }}
     />
   </Stack.Navigator>
