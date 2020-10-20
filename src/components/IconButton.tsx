@@ -5,10 +5,15 @@ import Icon from 'react-native-vector-icons/AntDesign';
 
 const iconSize = Platform.OS === 'android' ? 24 : 28;
 
-const IconButton: React.FC<{ name: string }> = ({ name }) => {
+type Callback = () => void;
+
+const IconButton: React.FC<{ name: string; onPress?: Callback }> = ({
+  name,
+  onPress,
+}) => {
   return (
     <View style={styles.container}>
-      <BorderlessButton style={styles.touchable}>
+      <BorderlessButton style={styles.touchable} onPress={onPress}>
         <Icon name={name} size={iconSize} />
       </BorderlessButton>
     </View>
