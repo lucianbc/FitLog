@@ -1,13 +1,13 @@
 import React from 'react';
 import { Text } from 'react-native';
-import SafeAreaView from 'react-native-safe-area-view';
 import IconButton from '../components/IconButton';
+import Screen from '../components/Screen';
 import { NavParams } from '../navigation/types';
 
 const ExercisesScreen = () => (
-  <SafeAreaView>
+  <Screen>
     <Text>Exercises</Text>
-  </SafeAreaView>
+  </Screen>
 );
 
 const Icons: React.FC<{ onPlus: () => void }> = ({ onPlus }) => {
