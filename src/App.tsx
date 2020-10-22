@@ -1,12 +1,15 @@
 import { NavigationContainer } from '@react-navigation/native';
+import { Root } from 'native-base';
 import React from 'react';
 import TabNavigator from './navigation/Tabs';
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <TabNavigator />
-    </NavigationContainer>
+    <Root>
+      <NavigationContainer>
+        <TabNavigator />
+      </NavigationContainer>
+    </Root>
   );
 };
 
