@@ -1,60 +1,64 @@
-import React from 'react';
-import { Text, TextInput, TextProps } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/AntDesign';
+import { Button, Text } from 'native-base';
+import React, { useState } from 'react';
 import Collection from '../components/Collection';
+import { Element, TextField } from '../components/form';
+import Picker from '../components/form/Picker';
 import Screen from '../components/Screen';
+import { BodyPart, BodyParts, Categories, Category } from '../model';
 
-const Label: React.FC<TextProps & { text: string }> = (props) => (
-  <Text {...props} style={[styles.label, [props.style]]}>
-    {props.text}
-  </Text>
-);
+interface AddExerciseForm {
+  name: string;
+  category: Category;
+  bodyPart: BodyPart;
+}
 
-const Element: React.FC<{ label: string; children?: React.ReactNode }> = ({
-  label,
-  children,
-}) => (
-  <>
-    <Label text={label} style={{ marginBottom: 4 }} />
-    {children}
-  </>
-);
-
-const Picker = () => {
-  return (
-    <TouchableWithoutFeedback
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}>
-      <TextInput
-        style={[
-          styles.textField,
-          {
-            borderBottomWidth: 0,
-            flex: 1,
-          },
-        ]}
-        placeholder="ASD"
-        editable={false}
-      />
-      <Icon name="downcircle" size={16} />
-    </TouchableWithoutFeedback>
-  );
+const placeholders: AddExerciseForm = {
+  name: 'Biceps Curl',
+  category: Categories[0],
+  bodyPart: BodyParts[0],
 };
 
 const AddExerciseScreen = () => {
+  const [name, setName] = useState<string>();
+  const [category, setCategory] = useState<Category>();
+  const [bodyPart, setBodyPart] = useState<BodyPart>();
+
   return (
-    <Screen>
+    <Screen
+      style={{
+        flex: 1,
+      }}>
       <Collection spacing={12}>
         <Element label="Exercise Name">
-          <TextInput style={styles.textField} placeholder="Biceps Curl" />
+          <TextField
+            style={styles.textField}
+            placeholder={placeholders.name}
+            value={name}
+            onChangeText={setName}
+          />
         </Element>
         <Element label="Category">
-          <Picker />
+          <Picker
+            choices={Categories}
+            value={category || placeholders.category}
+            title={'Category'}
+            // @ts-ignore
+            onPress={setCategory}
+          />
+        </Element>
+        <Element label="Muscle Group">
+          <Picker
+            choices={BodyParts}
+            value={bodyPart || placeholders.bodyPart}
+            title={'Muscle Group'}
+            // @ts-ignore
+            onPress={setBodyPart}
+          />
         </Element>
       </Collection>
+      <Button full style={{ marginTop: 'auto' }}>
+        <Text>Save</Text>
+      </Button>
     </Screen>
   );
 };

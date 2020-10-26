@@ -20,3 +20,26 @@ export const Categories: Category[] = [
   'Cardio',
   'Duration',
 ];
+
+export const BodyParts: BodyPart[] = [
+  'Core',
+  'Biceps',
+  'Triceps',
+  'Shoulders',
+  'Back',
+  'Chest',
+  'Legs',
+  'Full Body',
+  'Cardio',
+];
+
+export type BodyPart =
+  | 'Core'
+  | 'Biceps'
+  | 'Triceps'
+  | 'Shoulders'
+  | 'Back'
+  | 'Chest'
+  | 'Legs'
+  | 'Full Body'
+  | 'Cardio';
