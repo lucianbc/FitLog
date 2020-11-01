@@ -13,17 +13,16 @@ const ExerciseSchema: Realm.ObjectSchema = {
   primaryKey: 'id',
 };
 
-export const saveExercise = async (exercise: AddExerciseForm) => {
+export const saveExercise = (realm: Realm) => async (
+  exercise: AddExerciseForm,
+) => {
   const id = uuid();
-  const realm = await Realm.open({ schema: [ExerciseSchema] });
 
   const value = { ...exercise, id };
 
-  try {
-    realm.write(() => {
-      realm.create(ExerciseSchema.name, value);
-    });
-  } finally {
-    realm.close();
-  }
+  realm.write(() => {
+    realm.create(ExerciseSchema.name, value);
+  });
 };
+
+export const openRealm = () => Realm.open({ schema: [ExerciseSchema] });

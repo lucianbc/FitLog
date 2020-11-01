@@ -5,6 +5,7 @@ import { useAsyncOperation } from '../common/useAsyncOperation';
 import Collection from '../components/Collection';
 import { Element, TextField } from '../components/form';
 import Picker from '../components/form/Picker';
+import { useRealm } from '../components/RealmProvider';
 import Screen from '../components/Screen';
 import { BodyPart, BodyParts, Categories, Category } from '../model';
 import { saveExercise } from './model';
@@ -26,7 +27,8 @@ const AddExerciseScreen = () => {
   const [category, setCategory] = useState<Category>(placeholders.category);
   const [bodyPart, setBodyPart] = useState<BodyPart>(placeholders.bodyPart);
 
-  const [isSending, trigger] = useAsyncOperation(saveExercise);
+  const realm = useRealm();
+  const [isSending, trigger] = useAsyncOperation(saveExercise(realm));
 
   const navigation = useNavigation();
 
