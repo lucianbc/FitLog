@@ -1,12 +1,15 @@
+import { useNavigation } from '@react-navigation/native';
 import { Button, Text } from 'native-base';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import { useAsyncOperation } from '../common/useAsyncOperation';
 import Collection from '../components/Collection';
 import { Element, TextField } from '../components/form';
 import Picker from '../components/form/Picker';
 import Screen from '../components/Screen';
 import { BodyPart, BodyParts, Categories, Category } from '../model';
+import { saveExercise } from './model';
 
-interface AddExerciseForm {
+export interface AddExerciseForm {
   name: string;
   category: Category;
   bodyPart: BodyPart;
@@ -20,8 +23,23 @@ const placeholders: AddExerciseForm = {
 
 const AddExerciseScreen = () => {
   const [name, setName] = useState<string>();
-  const [category, setCategory] = useState<Category>();
-  const [bodyPart, setBodyPart] = useState<BodyPart>();
+  const [category, setCategory] = useState<Category>(placeholders.category);
+  const [bodyPart, setBodyPart] = useState<BodyPart>(placeholders.bodyPart);
+
+  const [isSending, trigger] = useAsyncOperation(saveExercise);
+
+  const navigation = useNavigation();
+
+  const handleSubmit = useCallback(async () => {
+    try {
+      if (name && category && bodyPart) {
+        const [isMounted] = await trigger({ name, category, bodyPart });
+        if (isMounted) {
+          navigation.goBack();
+        }
+      }
+    } catch (e) {}
+  }, [bodyPart, category, name, navigation, trigger]);
 
   return (
     <Screen
@@ -56,7 +74,11 @@ const AddExerciseScreen = () => {
           />
         </Element>
       </Collection>
-      <Button full style={{ marginTop: 'auto' }}>
+      <Button
+        full
+        style={styles.button}
+        onPress={handleSubmit}
+        disabled={isSending}>
         <Text>Save</Text>
       </Button>
     </Screen>
@@ -71,6 +93,9 @@ const styles = {
     width: '100%',
     fontSize: 24,
     borderBottomWidth: 1,
+  },
+  button: {
+    marginTop: 'auto',
   },
 };
 
