@@ -20,6 +20,7 @@ const RealmProvider = ({ children }: { children: any }) => {
   const realmRef = useRef<Realm>();
   const [initialised, setInitialised] = useState(false);
   useEffect(() => {
+    console.debug('Realm initialising');
     let isMounted = true;
     async function loadRealm() {
       realmRef.current = await openRealm();
@@ -31,7 +32,9 @@ const RealmProvider = ({ children }: { children: any }) => {
     }
     loadRealm();
     return () => {
+      console.debug('Realm cleanup');
       if (realmRef.current && !realmRef.current.isClosed) {
+        console.debug('Realm actually closed');
         realmRef.current.close();
       }
       isMounted = false;
