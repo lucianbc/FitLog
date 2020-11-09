@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import {
+  PanGestureHandler,
+  State,
+  TouchableHighlight,
+} from 'react-native-gesture-handler';
 import Animated, {
   add,
   call,
@@ -28,10 +32,12 @@ import { Button, Text as NativeText } from 'native-base';
 
 const snapPoints = [-100, 0];
 
-const AnimatedItem: React.FC<{
-  item: AddExerciseForm;
-  onRemove: () => void;
-}> = ({ item, onRemove }) => {
+const AnimatedItem: React.FC<
+  {
+    item: AddExerciseForm;
+    onRemove: () => void;
+  } & Props
+> = ({ item, onRemove }) => {
   const {
     gestureHandler,
     translation,
@@ -93,36 +99,49 @@ const AnimatedItem: React.FC<{
   );
 };
 
-const ExerciseItem: React.FC<{ item: AddExerciseForm }> = ({ item }) => {
+const ExerciseItem: React.FC<{ item: AddExerciseForm } & Props> = ({
+  item,
+  onItemSelected,
+}) => {
   return (
-    <Box ph pv={12} style={{ flexDirection: 'row', backgroundColor: 'white' }}>
-      <View style={{ marginRight: 16 }}>
-        <View
-          style={{
-            height: 50,
-            width: 50,
-            backgroundColor: '#4b95fe',
-            borderRadius: 15,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Text style={{ fontSize: 25, color: 'white' }}>
-            {item.bodyPart[0]}
+    <TouchableHighlight
+      onPress={onItemSelected ? () => onItemSelected(item) : undefined}>
+      <Box
+        ph
+        pv={12}
+        style={{ flexDirection: 'row', backgroundColor: 'white' }}>
+        <View style={{ marginRight: 16 }}>
+          <View
+            style={{
+              height: 50,
+              width: 50,
+              backgroundColor: '#4b95fe',
+              borderRadius: 15,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Text style={{ fontSize: 25, color: 'white' }}>
+              {item.bodyPart[0]}
+            </Text>
+          </View>
+        </View>
+        <View>
+          <Text
+            style={{ fontSize: 20 }}>{`${item.name} (${item.category})`}</Text>
+          <Text style={{ fontSize: 16, lineHeight: 24, color: '#5a5a5a' }}>
+            {item.bodyPart}
           </Text>
         </View>
-      </View>
-      <View>
-        <Text
-          style={{ fontSize: 20 }}>{`${item.name} (${item.category})`}</Text>
-        <Text style={{ fontSize: 16, lineHeight: 24, color: '#5a5a5a' }}>
-          {item.bodyPart}
-        </Text>
-      </View>
-    </Box>
+      </Box>
+    </TouchableHighlight>
   );
 };
 
-const ExercisesScreen = () => {
+interface Props {
+  onItemSelected?: (item: AddExerciseForm) => void;
+}
+
+const ExercisesScreen: React.FC<Props> = ({ onItemSelected }) => {
   const realm = useRealm();
   const [exercises] = useState(realm.objects<AddExerciseForm>('Exercise'));
   return (
@@ -133,6 +152,7 @@ const ExercisesScreen = () => {
         renderItem={({ item }) => (
           <AnimatedItem
             item={item}
+            onItemSelected={onItemSelected}
             onRemove={() => {
               realm.write(() => {
                 realm.delete(item);
