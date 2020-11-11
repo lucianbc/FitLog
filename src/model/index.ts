@@ -1,3 +1,5 @@
+import { AddExerciseForm } from '../exercises/AddExerciseScreen';
+
 export type Category =
   | 'Barbell'
   | 'Dumbbell'
@@ -43,3 +45,9 @@ export type BodyPart =
   | 'Legs'
   | 'Full Body'
   | 'Cardio';
+
+export type ExerciseValue = AddExerciseForm;
+
+export type Entity<T extends object> = T & { id: string };
+
+export type Exercise = Entity<ExerciseValue>;

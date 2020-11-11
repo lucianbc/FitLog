@@ -20,7 +20,6 @@ import IconButton from '../components/IconButton';
 import { useRealm } from '../components/RealmProvider';
 import Screen from '../components/Screen';
 import { NavParams } from '../navigation/types';
-import { AddExerciseForm } from './AddExerciseScreen';
 import {
   snapPoint,
   timing,
@@ -29,15 +28,16 @@ import {
   useValue,
 } from 'react-native-redash';
 import { Button, Text as NativeText } from 'native-base';
+import { Exercise } from '../model';
 
 const snapPoints = [-100, 0];
 
 const AnimatedItem: React.FC<
   {
-    item: AddExerciseForm;
+    item: Exercise;
     onRemove: () => void;
   } & Props
-> = ({ item, onRemove }) => {
+> = ({ item, onRemove, onItemSelected }) => {
   const {
     gestureHandler,
     translation,
@@ -92,14 +92,14 @@ const AnimatedItem: React.FC<
       </View>
       <PanGestureHandler {...gestureHandler}>
         <Animated.View style={{ transform: [{ translateX }] }}>
-          <ExerciseItem item={item} />
+          <ExerciseItem item={item} onItemSelected={onItemSelected} />
         </Animated.View>
       </PanGestureHandler>
     </Animated.View>
   );
 };
 
-const ExerciseItem: React.FC<{ item: AddExerciseForm } & Props> = ({
+const ExerciseItem: React.FC<{ item: Exercise } & Props> = ({
   item,
   onItemSelected,
 }) => {
@@ -138,12 +138,12 @@ const ExerciseItem: React.FC<{ item: AddExerciseForm } & Props> = ({
 };
 
 interface Props {
-  onItemSelected?: (item: AddExerciseForm) => void;
+  onItemSelected?: (item: Exercise) => void;
 }
 
 const ExercisesScreen: React.FC<Props> = ({ onItemSelected }) => {
   const realm = useRealm();
-  const [exercises] = useState(realm.objects<AddExerciseForm>('Exercise'));
+  const [exercises] = useState(realm.objects<Exercise>('Exercise'));
   return (
     <Screen ph={0} pv={0}>
       <FlatList
