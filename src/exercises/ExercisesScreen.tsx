@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import {
   PanGestureHandler,
@@ -141,9 +141,26 @@ interface Props {
   onItemSelected?: (item: Exercise) => void;
 }
 
+function useObjects<T>(name: string) {
+  const realm = useRealm();
+  const query = useRef(realm.objects<T>(name));
+  const [state, setState] = useState<readonly T[]>([...query.current]);
+  useEffect(() => {
+    const q = query.current;
+    const callback = (data: readonly T[]) => {
+      setState([...data]);
+    };
+    q.addListener(callback);
+    return () => {
+      q.removeListener(callback);
+    };
+  }, []);
+  return state;
+}
+
 const ExercisesScreen: React.FC<Props> = ({ onItemSelected }) => {
   const realm = useRealm();
-  const [exercises] = useState(realm.objects<Exercise>('Exercise'));
+  const exercises = useObjects<Exercise>('Exercise');
   return (
     <Screen ph={0} pv={0}>
       <FlatList
