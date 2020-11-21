@@ -10,7 +10,10 @@ const Screen: React.FC<{
 }> = ({ children, style, ph, pv }) => {
   return (
     <SafeAreaView style={style}>
-      <Box ph={ph || ph === 0 ? ph : true} pv={pv || pv === 0 ? pv : true}>
+      <Box
+        ph={ph || ph === 0 ? ph : true}
+        pv={pv || pv === 0 ? pv : true}
+        style={{ flex: 1 }}>
         {children}
       </Box>
     </SafeAreaView>
