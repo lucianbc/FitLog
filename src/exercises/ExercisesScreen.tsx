@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { FlatList, Text, View } from 'react-native';
 import {
   PanGestureHandler,
@@ -29,6 +29,7 @@ import {
 } from 'react-native-redash';
 import { Button, Text as NativeText } from 'native-base';
 import { Exercise } from '../model';
+import { useObjects } from '../common/useObjects';
 
 const snapPoints = [-100, 0];
 
@@ -139,23 +140,6 @@ const ExerciseItem: React.FC<{ item: Exercise } & Props> = ({
 
 interface Props {
   onItemSelected?: (item: Exercise) => void;
-}
-
-function useObjects<T>(name: string) {
-  const realm = useRealm();
-  const query = useRef(realm.objects<T>(name));
-  const [state, setState] = useState<readonly T[]>([...query.current]);
-  useEffect(() => {
-    const q = query.current;
-    const callback = (data: readonly T[]) => {
-      setState([...data]);
-    };
-    q.addListener(callback);
-    return () => {
-      q.removeListener(callback);
-    };
-  }, []);
-  return state;
 }
 
 const ExercisesScreen: React.FC<Props> = ({ onItemSelected }) => {
