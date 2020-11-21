@@ -23,4 +23,8 @@ const Navigator = () => (
   </CreateWorkoutProvider>
 );
 
+export const options = {
+  title: 'Create workout',
+};
+
 export default Navigator;
