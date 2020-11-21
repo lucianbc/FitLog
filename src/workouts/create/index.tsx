@@ -17,7 +17,6 @@ const Navigator = () => (
       <Stack.Screen
         name="exercises-add-exercise"
         component={Exercises.default}
-        options={Exercises.options}
       />
     </Stack.Navigator>
   </CreateWorkoutProvider>
