@@ -51,3 +51,10 @@ export type ExerciseValue = AddExerciseForm;
 export type Entity<T extends object> = T & { id: string };
 
 export type Exercise = Entity<ExerciseValue>;
+
+export type ExerciseRecord = Exercise & {
+  sets?: number;
+  reps?: number;
+  restBetweenSets?: number;
+  restBetweenReps?: number;
+};

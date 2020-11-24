@@ -4,7 +4,8 @@ import { View } from 'react-native';
 const Collection: React.FC<{
   children: React.ReactNode;
   spacing?: number;
-}> = ({ children, spacing = 4 }) => {
+  atEnd?: boolean;
+}> = ({ children, spacing = 4, atEnd }) => {
   const count = React.Children.count(children);
   return (
     <>
@@ -12,7 +13,9 @@ const Collection: React.FC<{
         return (
           <>
             {child}
-            {index !== count - 1 && <View style={{ height: spacing }} />}
+            {(atEnd || index !== count - 1) && (
+              <View style={{ height: spacing }} />
+            )}
           </>
         );
       })}

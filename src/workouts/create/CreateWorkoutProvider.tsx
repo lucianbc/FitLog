@@ -1,10 +1,14 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { Exercise } from '../../model';
+import { Exercise, ExerciseRecord } from '../../model';
 
 interface WorkoutOps {
+  readonly exercises: ExerciseRecord[];
   addExercise: (exercise: Exercise) => void;
   removeExercise: (exercise: Exercise) => void;
-  readonly exercises: Exercise[];
+  updateRecord: (action: {
+    previous: ExerciseRecord;
+    update: ExerciseRecord;
+  }) => void;
 }
 
 const defaultFn = () => {};
@@ -12,6 +16,7 @@ const defaultFn = () => {};
 const defaultOps: WorkoutOps = {
   addExercise: defaultFn,
   removeExercise: defaultFn,
+  updateRecord: defaultFn,
   exercises: [],
 };
 
@@ -37,9 +42,18 @@ const CreateWorkoutProvider: React.FC<{ children: React.ReactNode }> = ({
     (e: Exercise) => setExercises((ex) => ex.filter((crt) => crt !== e)),
     [setExercises],
   );
+  const updateRecord: WorkoutOps['updateRecord'] = useCallback(
+    ({ previous, update }) => {
+      console.debug('Updating -', previous, update);
+      const newState = exercises.map((e) => (e === previous ? update : e));
+
+      setExercises(newState);
+    },
+    [exercises],
+  );
   return (
     <CreateWorkoutCtx.Provider
-      value={{ addExercise, removeExercise, exercises }}>
+      value={{ addExercise, removeExercise, updateRecord, exercises }}>
       {children}
     </CreateWorkoutCtx.Provider>
   );
