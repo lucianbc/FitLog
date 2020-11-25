@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Button, Text } from 'native-base';
 import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
-import { useObjects } from '../../common/useObjects';
+import { useClonedObjects } from '../../common/useObjects';
 import Box from '../../components/Box';
 import { ExerciseItem } from '../../components/exercises/ExerciseItem';
 import ListSeparator from '../../components/ListSeparator';
@@ -13,7 +13,7 @@ import { useWorkoutOps } from './CreateWorkoutProvider';
 const Exercises = () => {
   const workout = useWorkoutOps();
   const navigation = useNavigation();
-  const exercises = useObjects<Exercise>('Exercise');
+  const exercises = useClonedObjects<Exercise>('Exercise');
 
   const isSelected = useCallback(
     (itemId: string) => !!workout.exercises.find((v) => v.id === itemId),

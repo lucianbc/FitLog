@@ -77,14 +77,11 @@ const ExerciseWidget: React.FC<{
   updateFn: ReturnType<typeof useWorkoutOps>['updateRecord'];
 }> = ({ exercise, updateFn }) => {
   const triggerUpdate = useCallback(
-    (change: (x: number) => ExerciseRecord) => (value: string) => {
-      try {
-        const x = parseInt(value, 10);
-        const newInstance = change(x);
-        console.debug('Previous', exercise);
-        console.debug('Update', newInstance);
-        updateFn({ previous: exercise, update: newInstance });
-      } catch {}
+    (change: (x: number | undefined) => ExerciseRecord) => (value: string) => {
+      const x = parseInt(value, 10);
+      const res = isNaN(x) ? undefined : x;
+      const newInstance = change(res);
+      updateFn({ previous: exercise, update: newInstance });
     },
     [exercise, updateFn],
   );

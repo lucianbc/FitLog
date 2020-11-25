@@ -44,9 +44,7 @@ const CreateWorkoutProvider: React.FC<{ children: React.ReactNode }> = ({
   );
   const updateRecord: WorkoutOps['updateRecord'] = useCallback(
     ({ previous, update }) => {
-      console.debug('Updating -', previous, update);
       const newState = exercises.map((e) => (e === previous ? update : e));
-
       setExercises(newState);
     },
     [exercises],
