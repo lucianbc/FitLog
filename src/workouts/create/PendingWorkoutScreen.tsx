@@ -51,7 +51,11 @@ const PendingWorkoutScreen = ({ navigation }: any) => {
         data={workoutOps.exercises}
         keyExtractor={(_, index) => `${index}`}
         renderItem={({ item }) => (
-          <ExerciseWidget exercise={item} updateFn={workoutOps.updateRecord} />
+          <ExerciseWidget
+            exercise={item}
+            updateFn={workoutOps.updateRecord}
+            removeFn={workoutOps.removeExercise}
+          />
         )}
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
         ListFooterComponent={SaveButton}
@@ -75,7 +79,8 @@ const SaveButton = () => {
 const ExerciseWidget: React.FC<{
   exercise: ExerciseRecord;
   updateFn: ReturnType<typeof useWorkoutOps>['updateRecord'];
-}> = ({ exercise, updateFn }) => {
+  removeFn: ReturnType<typeof useWorkoutOps>['removeExercise'];
+}> = ({ exercise, updateFn, removeFn }) => {
   const triggerUpdate = useCallback(
     (change: (x: number | undefined) => ExerciseRecord) => (value: string) => {
       const x = parseInt(value, 10);
@@ -87,7 +92,17 @@ const ExerciseWidget: React.FC<{
   );
   return (
     <View>
-      <H3>{`${exercise.name} - ${exercise.category}`}</H3>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+        <H3>{`${exercise.name} - ${exercise.category}`}</H3>
+        <Button small transparent onPress={() => removeFn(exercise)}>
+          <Text>Delete</Text>
+        </Button>
+      </View>
       <Item inlineLabel>
         <Label>Sets</Label>
         <Input
