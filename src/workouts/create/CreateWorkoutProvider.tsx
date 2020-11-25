@@ -32,10 +32,7 @@ const CreateWorkoutProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const addExercise = useCallback(
-    (e: Exercise) =>
-      setExercises((ex) =>
-        ex.find((crt) => crt.id === e.id) ? ex : [...ex, e],
-      ),
+    (e: Exercise) => setExercises((ex) => [...ex, e]),
     [setExercises],
   );
   const removeExercise = useCallback(

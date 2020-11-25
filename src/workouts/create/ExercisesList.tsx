@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { Button, Text } from 'native-base';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FlatList } from 'react-native';
 import { useClonedObjects } from '../../common/useObjects';
 import Box from '../../components/Box';
@@ -11,13 +11,16 @@ import { Exercise } from '../../model';
 import { useWorkoutOps } from './CreateWorkoutProvider';
 
 const Exercises = () => {
+  type M = Exercise;
   const workout = useWorkoutOps();
   const navigation = useNavigation();
-  const exercises = useClonedObjects<Exercise>('Exercise');
+  const exercises = useClonedObjects<M>('Exercise');
+
+  const [selectedExercises, setSelectedExercises] = useState<M[]>([]);
 
   const isSelected = useCallback(
-    (itemId: string) => !!workout.exercises.find((v) => v.id === itemId),
-    [workout.exercises],
+    (itemId: string) => !!selectedExercises.find((v) => v.id === itemId),
+    [selectedExercises],
   );
 
   return (
@@ -33,7 +36,12 @@ const Exercises = () => {
             <ExerciseItem
               item={item}
               onItemSelected={
-                itemSelected ? workout.removeExercise : workout.addExercise
+                itemSelected
+                  ? (i) =>
+                      setSelectedExercises((ex) =>
+                        ex.filter((v) => v.id !== i.id),
+                      )
+                  : (i) => setSelectedExercises((ex) => [...ex, i])
               }
               style={itemSelected ? { backgroundColor: '#a4e2ff' } : undefined}
             />
@@ -42,10 +50,15 @@ const Exercises = () => {
         ItemSeparatorComponent={ListSeparator}
       />
 
-      {workout.exercises.length > 0 && (
+      {selectedExercises.length > 0 && (
         <Box ph pv style={{ width: '100%', position: 'absolute', bottom: 0 }}>
-          <Button full onPress={navigation.goBack}>
-            <Text>{`Save (${workout.exercises.length})`}</Text>
+          <Button
+            full
+            onPress={() => {
+              selectedExercises.forEach(workout.addExercise);
+              navigation.goBack();
+            }}>
+            <Text>{`Save (${selectedExercises.length})`}</Text>
           </Button>
         </Box>
       )}

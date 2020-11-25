@@ -50,8 +50,9 @@ const PendingWorkoutScreen = ({ navigation }: any) => {
         )}
         data={workoutOps.exercises}
         keyExtractor={(_, index) => `${index}`}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           <ExerciseWidget
+            index={index}
             exercise={item}
             updateFn={workoutOps.updateRecord}
             removeFn={workoutOps.removeExercise}
@@ -80,7 +81,8 @@ const ExerciseWidget: React.FC<{
   exercise: ExerciseRecord;
   updateFn: ReturnType<typeof useWorkoutOps>['updateRecord'];
   removeFn: ReturnType<typeof useWorkoutOps>['removeExercise'];
-}> = ({ exercise, updateFn, removeFn }) => {
+  index: number;
+}> = ({ exercise, updateFn, removeFn, index }) => {
   const triggerUpdate = useCallback(
     (change: (x: number | undefined) => ExerciseRecord) => (value: string) => {
       const x = parseInt(value, 10);
@@ -98,7 +100,7 @@ const ExerciseWidget: React.FC<{
           justifyContent: 'space-between',
           alignItems: 'center',
         }}>
-        <H3>{`${exercise.name} - ${exercise.category}`}</H3>
+        <H3>{`${index + 1}. ${exercise.name} - ${exercise.category}`}</H3>
         <Button small transparent onPress={() => removeFn(exercise)}>
           <Text>Delete</Text>
         </Button>
