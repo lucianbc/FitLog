@@ -17,6 +17,7 @@ import { useWorkoutOps } from './CreateWorkoutProvider';
 
 const PendingWorkoutScreen = ({ navigation }: any) => {
   const workoutOps = useWorkoutOps();
+
   return (
     <Screen
       style={{
@@ -24,11 +25,14 @@ const PendingWorkoutScreen = ({ navigation }: any) => {
         flex: 1,
       }}>
       <FlatList
-        ListHeaderComponent={() => (
+        ListHeaderComponent={
           <Collection atEnd spacing={8}>
             <Item stackedLabel>
               <Label>Workout Name</Label>
-              <Input />
+              <Input
+                value={workoutOps.name}
+                onChangeText={workoutOps.setName}
+              />
             </Item>
 
             <Textarea
@@ -36,6 +40,8 @@ const PendingWorkoutScreen = ({ navigation }: any) => {
               placeholder="Workout notes"
               underline
               bordered
+              value={workoutOps.notes}
+              onChangeText={workoutOps.setNotes}
             />
 
             <Button
@@ -47,7 +53,7 @@ const PendingWorkoutScreen = ({ navigation }: any) => {
               <Text>Add Exercise</Text>
             </Button>
           </Collection>
-        )}
+        }
         data={workoutOps.exercises}
         keyExtractor={(_, index) => `${index}`}
         renderItem={({ item, index }) => (
@@ -67,7 +73,7 @@ const PendingWorkoutScreen = ({ navigation }: any) => {
 
 const SaveButton = () => {
   const workoutOps = useWorkoutOps();
-  if (workoutOps.exercises.length === 0) {
+  if (workoutOps.exercises.length === 0 || !workoutOps.name) {
     return null;
   }
   return (

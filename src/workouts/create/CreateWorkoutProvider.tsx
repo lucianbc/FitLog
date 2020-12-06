@@ -1,6 +1,9 @@
 import React, { useCallback, useContext, useState } from 'react';
 import { Exercise, ExerciseRecord } from '../../model';
 
+type MaybeString = string | undefined;
+type UpdateString = (value: MaybeString) => void;
+
 interface WorkoutOps {
   readonly exercises: ExerciseRecord[];
   addExercise: (exercise: Exercise) => void;
@@ -9,6 +12,10 @@ interface WorkoutOps {
     previous: ExerciseRecord;
     update: ExerciseRecord;
   }) => void;
+  name: MaybeString;
+  setName: UpdateString;
+  notes: MaybeString;
+  setNotes: UpdateString;
 }
 
 const defaultFn = () => {};
@@ -18,6 +25,10 @@ const defaultOps: WorkoutOps = {
   removeExercise: defaultFn,
   updateRecord: defaultFn,
   exercises: [],
+  name: undefined,
+  setName: () => {},
+  notes: undefined,
+  setNotes: () => {},
 };
 
 const CreateWorkoutCtx = React.createContext<WorkoutOps>(defaultOps);
@@ -46,9 +57,20 @@ const CreateWorkoutProvider: React.FC<{ children: React.ReactNode }> = ({
     },
     [exercises],
   );
+  const [name, setName] = useState<MaybeString>();
+  const [notes, setNotes] = useState<MaybeString>();
   return (
     <CreateWorkoutCtx.Provider
-      value={{ addExercise, removeExercise, updateRecord, exercises }}>
+      value={{
+        addExercise,
+        removeExercise,
+        updateRecord,
+        exercises,
+        name,
+        setName,
+        notes,
+        setNotes,
+      }}>
       {children}
     </CreateWorkoutCtx.Provider>
   );
